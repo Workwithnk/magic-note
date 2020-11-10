@@ -1,8 +1,9 @@
-console,console.log("nk");
+// console,console.log("nk");
 shownotes();
 let btn = document.getElementById("btn");
 btn.addEventListener("click",function(){
   let inpText = document.getElementById("InpText");
+  let addTitle = document.getElementById("addTitle");
   let notes = localStorage.getItem("text");
   if(notes == null){
       notesObj = [];
@@ -10,9 +11,14 @@ btn.addEventListener("click",function(){
   else{
       notesObj = JSON.parse(notes);
   }
-   notesObj.push(inpText.value);
+  let myObj ={
+      title : addTitle.value,
+      text : inpText.value
+  }
+   notesObj.push(myObj);
    localStorage.setItem("text",JSON.stringify(notesObj));
    inpText.value="";
+   addTitle.value = "";
 //   console.log(notesObj);
     shownotes();
 });
@@ -29,8 +35,8 @@ function shownotes(){
     notesObj.forEach(function(element , index){
        html += `<div class="card my-3 p-2 mx-3"  id="Card" style="width: 18rem;">
        <div class=" noteCard card-body">
-       <h4>Note :${index + 1}</h4>
-         <p class="card-text">${element}</p>
+       <h4>${element.title}</h4>
+         <p style="color:gray;" class="card-text">${element.text}</p>
          <button id="${index}" onclick = deleteBtn(this.id) class="btn btn-primary bg-dark my-2" >Delete</button>
        </div>
      </div>`;
@@ -40,9 +46,8 @@ function shownotes(){
         notesEle.innerHTML = html;
     }
     else{
-        notesEle.innerHTML = "Enetr your first note , Using above area."
+        notesEle.innerHTML = `<h3>Let's start with our first note..</h3>`;
     }
-    
 };
 
 function deleteBtn(index){
@@ -68,12 +73,19 @@ search.addEventListener('input',function(){
     let noteCards = document.getElementsByClassName("noteCard");
     Array.from(noteCards).forEach(function(element){
              let cardTxt = element.getElementsByTagName("p")[0].innerHTML;
+             let cardTitle = element.getElementsByTagName("h4")[0].innerHTML;
              if(cardTxt.includes(inputVal)){
                  element.style.display = "block";
              }
              else{
                  element.style.display ="none";
              }
+             if(cardTitle.includes(inputVal)){
+                element.style.display = "block";
+            }
+            else{
+                element.style.display ="none";
+            }
     });
 
 });
